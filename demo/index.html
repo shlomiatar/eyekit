@@ -21,13 +21,17 @@
 <script>
 
     $(function () {
-        var btn = $('#test-button');
-        btn.click(function () {
-            console.log('CLICK!');
+        testSelector('#test-button');
+        testSelector('button');
+    });
+
+
+    function testSelector(sel) {
+        $(sel).hoverClick().click(function () {
+            console.log('clicked on', sel)
         });
 
-        window.hoverClick(btn, {});
-    });
+    }
 </script>
 </body>
 </html>

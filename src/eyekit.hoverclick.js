@@ -9,8 +9,8 @@
 
 (function ($, window, _) {
 
-    var CLICK_DELAY = 1200;
-    var HIDE_DELAY = 400;
+    var CLICK_DELAY = 2000;
+    var HIDE_DELAY = 500;
 
     /***
      *
@@ -19,13 +19,15 @@
      */
     function hoverClick(el, options) {
 
-        var _progressWrap;
+        var _wrap;
 
 
         // Generate the progress wrapper
         function _setupWrap() {
             var d = $('<div class="eyekit-hover-progress">' +
-                '<div class="eyekit-circle-fill"/>' +
+                '<div class="eyekit-circle-fill">' +
+                '<span class="eyekit-tick">&#10004;</span>' +
+                '</div>' +
                 '' +
                 '</div>').hide();
 
@@ -34,99 +36,110 @@
         }
 
 
-        /***
-         * Position the wrap
-         */
-        function position() {
-            // Target element size
-            var elSize = $.extend({
-                width: el.outerWidth(),
-                height: el.outerHeight()
-            }, el.offset());
-
-            // Progress element size
-            var wrapSize = $.extend({
-                width: _progressWrap.outerWidth(),
-                height: _progressWrap.outerHeight()
-            }, _progressWrap.offset());
-
-
-            // element center
-            var top = (elSize.top + (elSize.height / 2)) - (wrapSize.height / 2);
-            var left = (elSize.left + (elSize.width / 2)) - (wrapSize.width / 2);
-
-
-            _progressWrap.show().css({
-                top: Math.round(top),
-                left: Math.round(left)
-            });
-        }
-
-        var _stopMouseTracking = false;
-
         /**
          * Handle mouse move and relocate the wrap according to the mouse
          * @param event
          */
         function positionWithMouse(event) {
-            if (_stopMouseTracking) {
+            if (_completed) {
                 return;
             }
+
+            var x = event.clientX;
+            var y = event.clientY;
+
+            // Coerce the position
+
+            x = Math.max(x, _elOffset.left);
+            x = Math.min(x, _elOffset.right);
+
+            y = Math.max(y, _elOffset.top);
+            y = Math.min(y, _elOffset.bottom);
+
+
             // Progress element size
             var wrapSize = $.extend({
-                width: _progressWrap.outerWidth(),
-                height: _progressWrap.outerHeight()
-            }, _progressWrap.offset());
+                width: _wrap.outerWidth(),
+                height: _wrap.outerHeight()
+            }, _wrap.offset());
 
 
             // element center
-            var top = event.clientY - (wrapSize.height / 2);
-            var left = event.clientX - (wrapSize.width / 2);
+            var top = y - (wrapSize.height / 2);
+            var left = x - (wrapSize.width / 2);
 
 
-            _progressWrap.css({
+            _wrap.css({
                 top: Math.round(top),
                 left: Math.round(left)
             });
         }
 
-        function stopMouseTracking() {
-            _stopMouseTracking = true;
-        }
 
-        var _counter, _inProgress;
+        var _clickTimeout, _inProgress, _elOffset, _completed;
 
-        function start() {
+
+        function start(event) {
             if (_inProgress) {
                 return;
             }
 
+
+            el.addClass('eyekit-active');
+
+
             _inProgress = true;
+            _completed = false;
 
             clear();
 
+            // Store the offset
+            _elOffset = elOffset(el);
+            positionWithMouse(event);
+
+            _wrap.show();
             window.setTimeout(function () {
-                _progressWrap.addClass('loading');
+                _wrap.addClass('loading');
             }, 10);
 
 
-            // Position
-            position();
-            _counter = window.setTimeout(onWaitCompleted, CLICK_DELAY);
+            _clickTimeout = window.setTimeout(onWaitCompleted, CLICK_DELAY);
         }
 
+        /***
+         * Generate the offset dict for the element
+         *
+         * @param {jQuery} el
+         * @returns {object}
+         */
+        function elOffset(el) {
+            var o = $.extend({
+                width: el.outerWidth(),
+                height: el.outerHeight()
+            }, el.offset());
+
+            o.right = o.left + o.width;
+            o.bottom = o.top + o.height;
+
+            return o;
+        }
+
+
         function clear() {
-            if (_counter) {
-                window.clearTimeout(_counter);
-                _counter = null;
+            if (_clickTimeout) {
+                window.clearTimeout(_clickTimeout);
+                _clickTimeout = null;
             }
-            _stopMouseTracking = false;
+
+            el.removeClass('eyekit-active');
         }
 
         function onWaitCompleted() {
 
             // Hide
             hide();
+            _wrap.addClass('completed');
+            _completed = true;
 
             // Trigger click
             el.click();
@@ -137,28 +150,31 @@
          */
         function onClick() {
             // Quickly hide the element
-            _progressWrap.hide();
+            _wrap.hide();
             el.click();
 
             cleanup();
         }
 
         function tryStop() {
+            if (_completed) {
+                return;
+            }
             clear();
-            _progressWrap.removeClass('loading');
+            _wrap.removeClass('loading');
             hide();
         }
 
         function hide() {
-            _progressWrap.addClass('hiding');
+            _wrap.addClass('hiding');
 
             window.setTimeout(cleanup, HIDE_DELAY);
         }
 
         function cleanup() {
-            _progressWrap.
+            _wrap.
                 hide().
-                removeClass('hiding loading');
+                removeClass('hiding loading completed');
             _inProgress = false;
         }
 
@@ -168,24 +184,29 @@
             el.addClass('eyekit-hover-button');
 
 
-            _progressWrap = _setupWrap();
-            el.after(_progressWrap);
+            _wrap = _setupWrap();
+            el.after(_wrap);
 
             el.on('mouseenter', start);
-            el.on('mouseleave', stopMouseTracking);
-            _progressWrap.on('mousemove', _.debounce(positionWithMouse, 10));
 
-
-            _progressWrap.on('mouseleave', tryStop);
-            _progressWrap.on('click', onClick);
+            _wrap.on('mousemove', _.debounce(positionWithMouse, 10));
+            _wrap.on('mouseleave', tryStop);
+            _wrap.on('click', onClick);
         }
 
 
         setup();
     }
 
+    // Hookup the jquery plugin
+    $.fn.hoverClick = function (options) {
+        this.each(function () {
+            hoverClick($(this), options);
+        });
 
-    window.hoverClick = hoverClick;
-})($, window, _);
+        return this;
+    }
+})
+($, window, _);
 
 

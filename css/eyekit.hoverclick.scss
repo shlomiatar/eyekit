@@ -7,6 +7,9 @@ body {
   margin: 100px;
 }
 
+$CLICK_DELAY: 2s;
+$HIDE_DELAY: 0.5s;
+
 /* base-class */
 
 .eyekit-hover-button {
@@ -15,15 +18,15 @@ body {
 
 /* Progress layer */
 .eyekit-hover-progress {
-  z-index:9999;
+  cursor: pointer;
+  z-index: 9999;
   position: absolute;
-  background: rgba(255,255,255,0);
+  background: rgba(255, 255, 255, 0);
   width: 100px;
   height: 100px;
 
   border: 10px solid rgba(#a10, 0.3);
   border-radius: 100%;
-
 
   .eyekit-circle-fill {
     position: absolute;
@@ -34,27 +37,45 @@ body {
     display: block;
 
     -webkit-transform: scale(0, 0);
+
+    .eyekit-tick {
+      opacity: 0;
+      display: block;
+      height: 100%;
+      width: 100%;
+      line-height: 100px;
+      text-align: center;
+      font-size: 60px;
+      color: #fff;
+    }
   }
 
   &.loading {
 
     -webkit-transition-delay: 0.2s;
-    -webkit-transition: border-color 1.2s;
+    -webkit-transition: border-color $CLICK_DELAY;
     border-color: rgba(#3eaa54, 0.4);
 
     .eyekit-circle-fill {
 
       transition-timing-function: ease-in;
       -webkit-transition-delay: 0s;
-      -webkit-transition: -webkit-transform 1.2s;
+      -webkit-transition: -webkit-transform $CLICK_DELAY;
       -webkit-transform: scale(1.2, 1.2);
       background-color: rgba(#3eaa54, 0.4);
     }
   }
 
+  &.completed {
+    .eyekit-tick {
+      -webkit-transition: opacity 0.2s linear;
+      opacity: 1;
+    }
+  }
+
   &.hiding {
     -webkit-transition-delay: 0;
-    -webkit-transition: -webkit-transform 0.4s ease-in;
+    -webkit-transition: -webkit-transform $HIDE_DELAY ease-in;
     -webkit-transform: scale(0, 0);
   }
 }
