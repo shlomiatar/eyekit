@@ -1,25 +1,14 @@
 {
-  "name": "eyekit",
-  "version": "0.0.1",
-  "description": "UI kit for eye tracking applications",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/shlomiatar/eyekit.git"
-  },
-  "keywords": [
-    "eye",
-    "tracking"
-  ],
-  "author": "Shlomi Atar",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/shlomiatar/eyekit/issues"
-  },
-  "homepage": "https://github.com/shlomiatar/eyekit"
+	"private": true,
+	"devDependencies": {
+		"grunt": "~0.4.1",
+		"grunt-cli": "~0.1.13",
+		"grunt-contrib-jshint": "~0.8.0",
+		"grunt-contrib-concat": "~0.3.0",
+		"grunt-contrib-uglify": "~0.3.2",
+		"grunt-contrib-coffee": "~0.9.0"
+	},
+	"scripts": {
+		"test": "grunt travis --verbose"
+	}
 }

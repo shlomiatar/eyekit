@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eyekit</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+    <script src="../vendor/underscore.js"></script>
+    <script src="../src/eyekit.hoverclick.js"></script>
+    <link rel="stylesheet" href="../css/reset.css"/>
+    <link rel="stylesheet" href="../css/eyekit.hoverclick.css"/>
+
+    <style>
+
+
+    </style>
+</head>
+<body>
+
+<button>BLA BLA</button>
+<a id="test-button">Click Me</a>
+<script>
+
+    $(function () {
+        var btn = $('#test-button');
+        btn.click(function () {
+            console.log('CLICK!');
+        });
+
+        window.hoverClick(btn, {});
+    });
+</script>
+</body>
+</html>

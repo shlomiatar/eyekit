@@ -1,0 +1,61 @@
+/***
+* HoverClick
+* ==========
+*/
+
+body {
+  margin: 100px;
+}
+
+/* base-class */
+
+.eyekit-hover-button {
+
+}
+
+/* Progress layer */
+.eyekit-hover-progress {
+  z-index:9999;
+  position: absolute;
+  background: rgba(255,255,255,0);
+  width: 100px;
+  height: 100px;
+
+  border: 10px solid rgba(#a10, 0.3);
+  border-radius: 100%;
+
+
+  .eyekit-circle-fill {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background: rgba(#a10, 0.3);
+    display: block;
+
+    -webkit-transform: scale(0, 0);
+  }
+
+  &.loading {
+
+    -webkit-transition-delay: 0.2s;
+    -webkit-transition: border-color 1.2s;
+    border-color: rgba(#3eaa54, 0.4);
+
+    .eyekit-circle-fill {
+
+      transition-timing-function: ease-in;
+      -webkit-transition-delay: 0s;
+      -webkit-transition: -webkit-transform 1.2s;
+      -webkit-transform: scale(1.2, 1.2);
+      background-color: rgba(#3eaa54, 0.4);
+    }
+  }
+
+  &.hiding {
+    -webkit-transition-delay: 0;
+    -webkit-transition: -webkit-transform 0.4s ease-in;
+    -webkit-transform: scale(0, 0);
+  }
+}
+

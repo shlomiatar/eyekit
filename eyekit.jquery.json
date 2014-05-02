@@ -1,0 +1,20 @@
+{
+	"name": "eyekit",
+	"title": "Eyekit",
+	"description": "A jump-start for jQuery plugins development.",
+	"keywords": [
+		"jquery",
+		"boilerplate",
+		"plugins"
+	],
+	"version": "3.3.3",
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://zenorocha.mit-license.org/"
+		}
+	],
+	"dependencies": {
+		"jquery": ">=1.4"
+	}
+}
