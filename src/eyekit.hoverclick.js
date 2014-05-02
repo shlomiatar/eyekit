@@ -9,7 +9,9 @@
 
 (function ($, window, _) {
 
+    var TOTAL_TIME = 2500;
     var CLICK_DELAY = 2000;
+    var LOADING_DELAY = TOTAL_TIME - CLICK_DELAY;
     var HIDE_DELAY = 500;
 
     /***
@@ -45,8 +47,8 @@
                 return;
             }
 
-            var x = event.clientX;
-            var y = event.clientY;
+            var x = event.pageX;
+            var y = event.pageY;
 
             // Coerce the position
 
@@ -76,7 +78,7 @@
         }
 
 
-        var _clickTimeout, _inProgress, _elOffset, _completed;
+        var _clickTimeout, _inProgress, _elOffset, _completed, _loadingDelay;
 
 
         function start(event) {
@@ -84,8 +86,12 @@
                 return;
             }
 
+            if (_elOffset && isInside(event.pageX, event.pageY, _elOffset)){
+                _elOffset = false;
+                return;
+            }
 
-            el.addClass('eyekit-active');
+                el.addClass('eyekit-active');
 
 
             _inProgress = true;
@@ -98,12 +104,38 @@
             positionWithMouse(event);
 
             _wrap.show();
-            window.setTimeout(function () {
+            _loadingDelay = window.setTimeout(function () {
                 _wrap.addClass('loading');
-            }, 10);
+            }, LOADING_DELAY);
 
 
             _clickTimeout = window.setTimeout(onWaitCompleted, CLICK_DELAY);
+        }
+
+
+        /***
+         * Checks if the point x,y is inside the offset dict ({top,left,width,height)
+         *
+         * @param {Number} x
+         * @param {Number} y
+         * @param {object} offsetDict
+         *
+         * @returns {Boolean}
+         */
+        function isInside(x, y, offsetDict) {
+            if (!offsetDict) {
+                return false;
+            }
+
+            if (x < offsetDict.left || x > offsetDict.right) {
+                return false;
+            }
+
+            if (y < offsetDict.top || y > offsetDict.bottom) {
+                return false;
+            }
+
+            return true;
         }
 
         /***
@@ -126,10 +158,8 @@
 
 
         function clear() {
-            if (_clickTimeout) {
-                window.clearTimeout(_clickTimeout);
-                _clickTimeout = null;
-            }
+            window.clearTimeout(_clickTimeout);
+            window.clearTimeout(_loadingDelay);
 
             el.removeClass('eyekit-active');
         }
@@ -190,6 +220,7 @@
             el.on('mouseenter', start);
 
             _wrap.on('mousemove', _.debounce(positionWithMouse, 10));
+            el.on('mousemove', _.debounce(positionWithMouse, 10));
             _wrap.on('mouseleave', tryStop);
             _wrap.on('click', onClick);
         }
