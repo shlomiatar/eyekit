@@ -1,0 +1,52 @@
+/***
+* HoverClick
+* ==========
+*/
+/* base-class */
+
+/* Progress layer */
+.eyekit-hover-progress {
+  cursor: pointer;
+  z-index: 9999;
+  position: absolute;
+  background: rgba(255, 255, 255, 0);
+  width: 100px;
+  height: 100px;
+  border: 10px solid rgba(170, 17, 0, 0.3);
+  border-radius: 100%; }
+  .eyekit-hover-progress .eyekit-circle-fill {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background: rgba(170, 17, 0, 0.3);
+    display: block;
+    -webkit-transform: scale(0, 0); }
+    .eyekit-hover-progress .eyekit-circle-fill .eyekit-tick {
+      opacity: 0;
+      display: block;
+      height: 100%;
+      width: 100%;
+      line-height: 100px;
+      text-align: center;
+      font-size: 60px;
+      color: #fff; }
+  .eyekit-hover-progress.loading {
+    -webkit-transition-delay: 0s;
+    -webkit-transition: border-color 2s;
+    border-color: rgba(62, 170, 84, 0.4); }
+    .eyekit-hover-progress.loading .eyekit-circle-fill {
+      transition-timing-function: ease-in;
+      -webkit-transition-delay: 0s;
+      -webkit-transition: -webkit-transform 2s;
+      -webkit-transform: scale(1.2, 1.2);
+      background-color: rgba(62, 170, 84, 0.4); }
+  .eyekit-hover-progress.completed .eyekit-tick {
+    -webkit-transition: opacity 0.2s linear;
+    opacity: 1; }
+  .eyekit-hover-progress.hiding {
+    -webkit-transition-delay: 0;
+    -webkit-transition: -webkit-transform 0.5s ease-in;
+    -webkit-transform: scale(0, 0); }
+
+/*# sourceMappingURL=eyekit.hoverclick.css.map */

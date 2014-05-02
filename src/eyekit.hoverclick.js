@@ -172,7 +172,7 @@
             _completed = true;
 
             // Trigger click
-            el.click();
+            el[0].click();
         }
 
         /***
@@ -181,7 +181,7 @@
         function onClick() {
             // Quickly hide the element
             _wrap.hide();
-            el.click();
+            el[0].click();
 
             cleanup();
         }

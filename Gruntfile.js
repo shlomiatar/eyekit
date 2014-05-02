@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         concat: {
             dist: {
                 files: {
-                    'dist/jquery.eyekit.js': ["vendor/underscore.js", "src/jquery.eyekit.js"],
+                    'dist/jquery.eyekit.js': ["vendor/underscore.js", "src/eyekit.hoverclick.js"],
                     'dist/jquery.eyekit.css': ['css/eyekit.hoverclick.css']
                 }
             }
